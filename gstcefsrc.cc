@@ -474,7 +474,7 @@ run_cef (GstCefSrc *src)
   CefWindowInfo window_info;
   CefBrowserSettings browserSettings;
 
-  settings.no_sandbox = !src->sandbox;
+  settings.no_sandbox = ~src->sandbox;
   settings.windowless_rendering_enabled = true;
   settings.log_severity = src->log_severity;
 
@@ -563,10 +563,10 @@ class ShutdownEnforcer {
 
     CefPostTask(TID_UI, base::BindOnce(&quit_message_loop, 0));
 
-    g_mutex_lock(&init_lock);
-    while (cef_inited)
-      g_cond_wait (&init_cond, &init_lock);
-    g_mutex_unlock (&init_lock);
+    //g_mutex_lock(&init_lock);
+    //while (cef_inited)
+    //  g_cond_wait (&init_cond, &init_lock);
+    //g_mutex_unlock (&init_lock);
   }
 } shutdown_enforcer;
 
