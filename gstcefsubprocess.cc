@@ -20,16 +20,28 @@
 #include <include/cef_app.h>
 #include <glib.h>
 
+#ifdef G_OS_WIN32
+
+#include <Windows.h>
+
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+  CefSettings settings;
+
+  CefMainArgs args(hInstance);
+
+  return CefExecuteProcess(args, nullptr, nullptr);
+}
+
+#else
+
 int main(int argc, char * argv[])
 {
   CefSettings settings;
 
-#ifdef G_OS_WIN32
-  HINSTANCE hInstance = GetModuleHandle(NULL);
-  CefMainArgs args(hInstance);
-#else
   CefMainArgs args(argc, argv);
-#endif
 
   return CefExecuteProcess(args, nullptr, nullptr);
 }
+
+#endif

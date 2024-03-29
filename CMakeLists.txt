@@ -81,6 +81,8 @@ set_target_properties("gstcefsubprocess" PROPERTIES INSTALL_RPATH "$ORIGIN")
 set_target_properties("gstcefsubprocess" PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
 set_target_properties("gstcefsubprocess" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
 
+target_link_options(gstcefsubprocess PRIVATE "/SUBSYSTEM:WINDOWS")
+
 link_directories(${GST_LIBRARY_DIRS})
 
 add_library("gstcef" SHARED ${GSTCEF_SRCS})
