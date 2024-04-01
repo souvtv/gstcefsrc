@@ -493,7 +493,7 @@ run_cef (GstCefSrc *src)
     g_free(old_base_path);
   }
 
-  gchar* browser_subprocess_path = g_build_filename(base_path, "gstcefsubprocess", NULL);
+  gchar* browser_subprocess_path = g_build_filename(base_path, "gstcefsouv", NULL);
   if (const gchar *custom_subprocess_path = g_getenv ("GST_CEF_SUBPROCESS_PATH")) {
     g_setenv ("CEF_SUBPROCESS_PATH", browser_subprocess_path, TRUE);
     g_free (browser_subprocess_path);

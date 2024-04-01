@@ -57,8 +57,8 @@ set(GSTCEF_SRCS
   gstcefaudiometa.cc
 )
 
-set(GSTCEFSUBPROCESS_SRCS
-  gstcefsubprocess.cc
+set(GSTCEFSOUV_SRCS
+  gstcefsouv.cc
 )
 
 find_package(PkgConfig)
@@ -73,15 +73,15 @@ SET_CEF_TARGET_OUT_DIR()
 
 link_directories(${GST_LIBRARY_DIRS})
 
-add_executable("gstcefsubprocess" ${GSTCEFSUBPROCESS_SRCS})
-SET_EXECUTABLE_TARGET_PROPERTIES("gstcefsubprocess")
-target_link_libraries("gstcefsubprocess" libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS})
-target_include_directories("gstcefsubprocess" PUBLIC ${GST_INCLUDE_DIRS})
-set_target_properties("gstcefsubprocess" PROPERTIES INSTALL_RPATH "$ORIGIN")
-set_target_properties("gstcefsubprocess" PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
-set_target_properties("gstcefsubprocess" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
+add_executable("gstcefsouv" ${GSTCEFSOUV_SRCS})
+SET_EXECUTABLE_TARGET_PROPERTIES("gstcefsouv")
+target_link_libraries("gstcefsouv" libcef_lib libcef_dll_wrapper ${CEF_STANDARD_LIBS})
+target_include_directories("gstcefsouv" PUBLIC ${GST_INCLUDE_DIRS})
+set_target_properties("gstcefsouv" PROPERTIES INSTALL_RPATH "$ORIGIN")
+set_target_properties("gstcefsouv" PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
+set_target_properties("gstcefsouv" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
 
-target_link_options(gstcefsubprocess PRIVATE "/SUBSYSTEM:WINDOWS")
+target_link_options(gstcefsouv PRIVATE "/SUBSYSTEM:WINDOWS")
 
 link_directories(${GST_LIBRARY_DIRS})
 
@@ -103,6 +103,6 @@ install(
   DESTINATION .
 )
 install(
-  TARGETS "gstcef" "gstcefsubprocess"
+  TARGETS "gstcef" "gstcefsouv"
   DESTINATION .
 )
