@@ -8,6 +8,15 @@ cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release ..
 make
 ```
 
+## Build Windows 
+ 
+``` 
+mkdir build 
+cd build 
+cmake -DCMAKE_BUILD_TYPE=Release .. 
+cmake --build . --config Release 
+``` 
+
 ### Optional CMake variables
 
 - `CEF_VERSION` allows to override the default CEF version

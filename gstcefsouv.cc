@@ -120,6 +120,39 @@ class RendererApp : public CefApp, public CefRenderProcessHandler {
   DISALLOW_COPY_AND_ASSIGN(RendererApp);
 };
 
+
+#ifdef G_OS_WIN32
+
+#include <Windows.h>
+
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+  CefSettings settings;
+
+  CefMainArgs args(hInstance);
+
+#ifdef GST_CEF_USE_SANDBOX
+  // Initialize the macOS sandbox for this helper process.
+  CefScopedSandboxContext sandbox_context;
+  if (!sandbox_context.Initialize(argc, argv)) {
+    fprintf(stderr, "Cannot initialize CEF sandbox for gstcefsouv.");
+    return -1;
+  }
+
+    // Try loading like an app bundle (1) or as
+  // a sibling (2, at development time).
+  if (!gst_initialize_cef(TRUE) && !gst_initialize_cef(FALSE)) {
+    fprintf(stderr, "Cannot load CEF into gstcefsouv.");
+    return -1;
+  }
+#endif
+
+
+  return CefExecuteProcess(args, nullptr, nullptr);
+}
+
+#else
+
 int main(int argc, char * argv[])
 {
 #if defined(__APPLE__) && defined(GST_CEF_USE_SANDBOX)
@@ -133,12 +166,8 @@ int main(int argc, char * argv[])
 
   CefSettings settings;
 
-#ifdef G_OS_WIN32
-  HINSTANCE hInstance = GetModuleHandle(NULL);
-  CefMainArgs args(hInstance);
-#else
   CefMainArgs args(argc, argv);
-#endif
+
 
 #if defined(__APPLE__) && defined(GST_CEF_USE_SANDBOX)
   // Try loading like an app bundle (1) or as
@@ -165,3 +194,5 @@ int main(int argc, char * argv[])
 
   return CefExecuteProcess(args, app, nullptr);
 }
+
+#endif

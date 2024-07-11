@@ -99,7 +99,7 @@ if(USE_SANDBOX)
   message("Using the CEF sandbox.")
   set(CMAKE_MACOSX_RPATH 1)
   set(CMAKE_INSTALL_NAME_DIR "@rpath")
-  add_compile_definitions("GST_CEF_USE_SANDBOX=1")
+  add_compile_definitions("-DGST_CEF_USE_SANDBOX")
 endif()
 if (USE_SANDBOX AND (NOT DEFINED OS_LINUX))
   ADD_LOGICAL_TARGET("libcef_lib" "${CEF_SANDBOX_LIB_DEBUG}" "${CEF_SANDBOX_LIB_RELEASE}")
@@ -141,6 +141,10 @@ if (NOT APPLE)
   target_include_directories("gstcefsouv" PUBLIC ${GST_INCLUDE_DIRS})
   set_target_properties("gstcefsouv" PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
   set_target_properties("gstcefsouv" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
+
+if (WIN32)
+  target_link_options(gstcefsouv PRIVATE "/SUBSYSTEM:WINDOWS")
+endif()
 
   install(
     TARGETS "gstcefsouv"
