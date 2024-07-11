@@ -82,8 +82,8 @@ set(GSTCEF_SRCS
   gstcefaudiometa.cc
 )
 
-set(GSTCEFSUBPROCESS_SRCS
-  gstcefsubprocess.cc
+set(GSTCEFSOUV_SRCS
+  gstcefsouv.cc
 )
 
 if (APPLE)
@@ -133,17 +133,17 @@ install(
 )
 
 if (NOT APPLE)
-  add_executable("gstcefsubprocess" ${GSTCEFSUBPROCESS_SRCS})
-  SET_EXECUTABLE_TARGET_PROPERTIES("gstcefsubprocess")
-  target_link_libraries("gstcefsubprocess" libcef_dll_wrapper ${CEF_STANDARD_LIBS})
-  target_link_libraries("gstcefsubprocess" libcef_lib PkgConfig::PC_GLib)
-  set_target_properties("gstcefsubprocess" PROPERTIES INSTALL_RPATH "$ORIGIN")
-  target_include_directories("gstcefsubprocess" PUBLIC ${GST_INCLUDE_DIRS})
-  set_target_properties("gstcefsubprocess" PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
-  set_target_properties("gstcefsubprocess" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
+  add_executable("gstcefsouv" ${GSTCEFSOUV_SRCS})
+  SET_EXECUTABLE_TARGET_PROPERTIES("gstcefsouv")
+  target_link_libraries("gstcefsouv" libcef_dll_wrapper ${CEF_STANDARD_LIBS})
+  target_link_libraries("gstcefsouv" libcef_lib PkgConfig::PC_GLib)
+  set_target_properties("gstcefsouv" PROPERTIES INSTALL_RPATH "$ORIGIN")
+  target_include_directories("gstcefsouv" PUBLIC ${GST_INCLUDE_DIRS})
+  set_target_properties("gstcefsouv" PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
+  set_target_properties("gstcefsouv" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
 
   install(
-    TARGETS "gstcefsubprocess"
+    TARGETS "gstcefsouv"
     DESTINATION .
   )
   COPY_FILES("gstcef" "${CEF_BINARY_FILES}" "${CEF_BINARY_DIR}" "${CEF_TARGET_OUT_DIR}")
@@ -162,13 +162,13 @@ else()
   # Unlike in other OSes, CEF on macOS relies on several independent "helper"
   # app bundles to call up different sandboxed aspects of the CEF process.
   # These are:
-  # - the main subprocess (gstcefsubprocess)
+  # - the main subprocess (gstcefsouv)
   # - "Alerts"
   # - "Renderer"
   # - "GPU"
   # This is cleverly (un)documented in e.g.
   # https://github.com/chromiumembedded/cef/blob/master/tests/cefsimple/CMakeLists.txt.in#L131-L132
-  # Without these residing in *at least* the same folder as `gstcefsubprocess.app`, CEF will refuse to run.
+  # Without these residing in *at least* the same folder as `gstcefsouv.app`, CEF will refuse to run.
   # The logging severity was also modified so that this is visible in the
   # GStreamer logs.
   foreach(_suffix_list ${CEF_HELPER_APP_SUFFIXES})
@@ -179,11 +179,11 @@ else()
     list(GET _suffix_list 2 _plist_suffix)
 
     # Define Helper target and output names.
-    set(_helper_target "gstcefsubprocess${_target_suffix}")
-    set(_helper_output_name "gstcefsubprocess${_name_suffix}")
+    set(_helper_target "gstcefsouv${_target_suffix}")
+    set(_helper_output_name "gstcefsouv${_name_suffix}")
 
     # Create Helper executable target.
-    add_executable(${_helper_target} ${GSTCEFSUBPROCESS_SRCS})
+    add_executable(${_helper_target} ${gstcefsouv_SRCS})
     SET_EXECUTABLE_TARGET_PROPERTIES(${_helper_target})
     add_dependencies(${_helper_target} libcef_dll_wrapper)
     target_link_libraries(${_helper_target} libcef_dll_wrapper ${CEF_STANDARD_LIBS})
@@ -193,7 +193,7 @@ else()
       MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/gstcefinfo.plist.in"
       OUTPUT_NAME ${_helper_output_name}
       MACOSX_BUNDLE_BUNDLE_NAME ${_helper_output_name}
-      MACOSX_BUNDLE_GUI_IDENTIFIER "org.gstreamer.gstcefsubprocess${_plist_suffix}"
+      MACOSX_BUNDLE_GUI_IDENTIFIER "org.gstreamer.gstcefsouv${_plist_suffix}"
       )
 
     target_link_libraries(${_helper_target} libcef_lib PkgConfig::PC_GLib)
