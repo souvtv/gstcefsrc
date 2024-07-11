@@ -126,7 +126,7 @@ int main(int argc, char * argv[])
   // Initialize the macOS sandbox for this helper process.
   CefScopedSandboxContext sandbox_context;
   if (!sandbox_context.Initialize(argc, argv)) {
-    fprintf(stderr, "Cannot initialize CEF sandbox for gstcefsubprocess.");
+    fprintf(stderr, "Cannot initialize CEF sandbox for gstcefsouv.");
     return -1;
   }
 #endif
@@ -144,7 +144,7 @@ int main(int argc, char * argv[])
   // Try loading like an app bundle (1) or as
   // a sibling (2, at development time).
   if (!gst_initialize_cef(TRUE) && !gst_initialize_cef(FALSE)) {
-    fprintf(stderr, "Cannot load CEF into gstcefsubprocess.");
+    fprintf(stderr, "Cannot load CEF into gstcefsouv.");
     return -1;
   }
 #endif
