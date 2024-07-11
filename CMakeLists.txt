@@ -142,6 +142,10 @@ if (NOT APPLE)
   set_target_properties("gstcefsouv" PROPERTIES BUILD_WITH_INSTALL_RPATH TRUE)
   set_target_properties("gstcefsouv" PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CEF_TARGET_OUT_DIR})
 
+if (WIN32)
+  target_link_options(gstcefsouv PRIVATE "/SUBSYSTEM:WINDOWS")
+endif()
+
   install(
     TARGETS "gstcefsouv"
     DESTINATION .
